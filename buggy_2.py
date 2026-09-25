@@ -25,3 +25,29 @@ if __name__ == "__main__":
     df = load("dirty_sales.csv")
     result = summarize(df)
     print(result)
+
+    # 회귀 없음 확인 및 정상 데이터 처리 증빙
+
+    print("\n--테스트--")
+    # 1) 정상 컬럼명('price', 'quantity')을 가진 가상의 테스트 데이터프레임 생성
+    test_data = pd.DataFrame({
+        "category": ["과자", "과자", "음료"],
+        "price": [1000, 2000, 3000],
+        "quantity": [2, 1, 3]
+    })
+    
+    # 2) 수정한 summarize 함수 실행 
+    # 기대값: 과자 = (1000*2) + (2000*1) = 4000 / 음료 = (3000*3) = 9000
+    test_result = summarize(test_data)
+    
+    print("1) 테스트 정상 데이터:")
+    print(test_data[['category', 'price', 'quantity']])
+    print("\n2) 실제 계산된 카테고리별 집계 결과:")
+    print(test_result)
+    
+    # 3) 결과 검증
+    is_snack_correct = test_result["과자"] == 4000
+    is_drink_correct = test_result["음료"] == 9000
+    
+    print(f"\n3) 검증(과자 카테고리 기대치 4000과 일치 여부): {is_snack_correct}")
+    print(f"4) 검증(음료 카테고리 기대치 9000과 일치 여부): {is_drink_correct}")

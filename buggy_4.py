@@ -42,3 +42,31 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # 회귀 없음 확인 및 정상 데이터 처리 증빙
+    print("\n--테스트--")
+    # 1) 정상, 결측, 음수, 극단값이 섞인 가상의 테스트 데이터프레임 생성
+    test_data = pd.DataFrame({
+        "product": ["정상상품", "결측상품", "음수상품", "극단값상품"],
+        "price": ["1000", None, "-500", "9999999"],
+        "quantity": [2, 1, 1, 1]
+    })
+    # 2) 정제 로직을 동일하게 적용
+    df_test = test_data.copy()
+    df_test["price"] = pd.to_numeric(df_test["price"], errors="coerce")
+    df_test = df_test.dropna(subset=["price"]) 
+    df_test = df_test[df_test["price"] > 0]
+    df_test = df_test[df_test["price"] < 9999999]
+    df_test["revenue"] = df_test["price"] * df_test["quantity"]
+    
+    print("1) 테스트 원본 데이터:")
+    print(test_data)
+    print("\n2) 정제 후 남은 데이터 (정상상품만 남아야 함):")
+    print(df_test[['product', 'price', 'quantity', 'revenue']])
+    
+    # 3) 검증: 정상상품 1건만 살아남았고, 그 매출액이 2000이 맞는지 확인
+    is_filtered_correctly = len(df_test) == 1 and df_test.iloc[0]["product"] == "정상상품"
+    is_revenue_correct = df_test.iloc[0]["revenue"] == 2000
+    
+    print(f"\n3) 검증(정상 데이터만 남기고 에러값 제거 여부): {is_filtered_correctly}")
+    print(f"4) 검증(정상 데이터 매출액 연산 일치 여부): {is_revenue_correct}")

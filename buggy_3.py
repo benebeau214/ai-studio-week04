@@ -29,5 +29,21 @@ def main():
     result = df.groupby("category")["revenue"].sum()   # <-- 여기서 죽는다
     print(result)
 
+    # 회귀 없음 확인 및 정상 데이터 처리 증빙
+
+    print("\n--테스트--")
+    # 1. 정상적으로 정제된 상위 3개 행의 데이터 확인   
+    print("1) price 정제 및 revenue 컬럼 생성 결과:")
+    print(df[['price', 'quantity', 'revenue']].head(3))
+
+    # 2. 첫 번째 행을 집어서 단가 * 수량 = 매출액 수식이 맞는지 확인
+    sample = df.iloc[0]
+    expected_revenue = sample['price'] * sample['quantity']
+    print(f"\n2) 개별 정상 데이터 연산 확인:")
+    print(f"단가(price): {sample['price']}")
+    print(f"수량(quantity): {sample['quantity']}")
+    print(f"실제 계산된 매출액(revenue): {sample['revenue']}")
+    print(f"검증(단가 x 수량 일치 여부): {sample['revenue'] == expected_revenue}")
+
 if __name__ == "__main__":
     main()

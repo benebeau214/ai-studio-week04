@@ -37,3 +37,22 @@ if __name__ == "__main__":
     print(f"급변 지점 {len(jumps)}건")
     for row in jumps[:10]:
         print(row)
+
+    # 회귀 없음 확인 및 정상 데이터 처리 증빙
+    print("\n--테스트--")
+    # 1) 가상의 테스트 가격 리스트 생성 (정상적인 변화와 급변 구간 포함)
+    test_prices = [1000, 2000, 150000, 151000]
+    
+    # 2) 수정한 함수 실행 (threshold=100000 기준)
+    # 인덱스 1(2000)에서 인덱스 2(150000)로 갈 때 차이가 148,000이므로 1건이 검출되어야 함
+    test_jumps = find_big_jumps(test_prices, threshold=100000)
+    
+    print(f"1) 테스트 가격 데이터: {test_prices}")
+    print(f"2) 검출된 급변 지점: {test_jumps}")
+    
+    # 3) 검증: 스크립트가 멈추지 않고 끝까지 돌았는지, 검출 내역이 정확한지 확인
+    is_completed_without_error = True 
+    is_jump_correct = len(test_jumps) == 1 and test_jumps[0][3] == 148000
+    
+    print(f"3) 검증(마지막 인덱스에서 IndexError 발생 안 함): {is_completed_without_error}")
+    print(f"4) 검증(급변 지점 1건 정상 검출 및 차액 일치 여부): {is_jump_correct}")
