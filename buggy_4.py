@@ -47,9 +47,9 @@ if __name__ == "__main__":
     print("\n--테스트--")
     # 1) 정상, 결측, 음수, 극단값이 섞인 가상의 테스트 데이터프레임 생성
     test_data = pd.DataFrame({
-        "product": ["정상상품", "결측상품", "음수상품", "극단값상품"],
-        "price": ["1000", None, "-500", "9999999"],
-        "quantity": [2, 1, 1, 1]
+        "product": ["정상상품", "결측상품", "음수상품", "극단값상품1", "극단값상품2"],
+        "price": ["1000", None, "-500", "9999999", "2000"],
+        "quantity": [2, 1, 1, 1, 9999999]
     })
     # 2) 정제 로직을 동일하게 적용
     df_test = test_data.copy()
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     df_test = df_test.dropna(subset=["price"]) 
     df_test = df_test[df_test["price"] > 0]
     df_test = df_test[df_test["price"] < 9999999]
+    df_test = df_test[df_test["quantity"] < 9999999]
     df_test["revenue"] = df_test["price"] * df_test["quantity"]
     
     print("1) 테스트 원본 데이터:")
